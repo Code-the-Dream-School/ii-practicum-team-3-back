@@ -1,20 +1,23 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const cors = require("cors");
-const favicon = require("express-favicon");
-const logger = require("morgan");
+import cors from "cors";
+import favicon from "express-favicon";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
 
-const mainRouter = require("./routes/mainRouter.js");
+import authRoutes from "./routes/authRouter.js";
+import mainRouter from "./routes/mainRouter.js";
 
 // middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.static("public"));
 app.use(favicon(__dirname + "/public/favicon.ico"));
 
 // routes
 app.use("/api/v1", mainRouter);
-
+app.use("/api/v1/auth", authRoutes);
 module.exports = app;
