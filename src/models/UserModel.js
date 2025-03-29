@@ -39,6 +39,14 @@ const userSchema = new mongoose.Schema(
       default: [],
     },
     refreshToken: { type: String, default: "" },
+    refreshTokenUpdatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    refreshTokenExpiresAt: {
+      type: Date,
+      default: () => new Date(Date.now() + 24 * 60 * 60 * 1000),
+    },
   },
   { timestamps: true }
 );
@@ -52,16 +60,19 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    {
+      userId: this._id,
+      firstName: this.first_name,
+      lastName: this.last_name,
+    },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
   );
 };
 
-// Do we needs RefreshToken?
 userSchema.methods.createRefreshToken = function () {
   return jwt.sign({ userId: this._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "24h", // i check some information and it can be from 24h by 180 days some where... may be change it back to 7days?
   });
 };
 
