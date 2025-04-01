@@ -10,7 +10,6 @@ import logger from "morgan";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRouter.js";
-import mainRouter from "./routes/mainRouter.js";
 
 // middleware
 app.use(cors());
@@ -22,6 +21,6 @@ app.use(express.static("public"));
 app.use(favicon(path.join(__dirname, "../public/favicon.ico")));
 
 // routes
-app.use("/api/v1", mainRouter);
+
 app.use("/api/v1/auth", authRoutes);
 export default app;
