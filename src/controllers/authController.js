@@ -124,11 +124,11 @@ async function login(req, res) {
       delete loginAttempts[ip];
     }
 
-    const accessToken = user.createJWT();
-    const refreshToken = user.createRefreshToken();
+    const accessToken = User.createJWT();
+    const refreshToken = User.createRefreshToken();
 
-    user.refreshToken = refreshToken;
-    await user.save();
+    User.refreshToken = refreshToken;
+    await User.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
