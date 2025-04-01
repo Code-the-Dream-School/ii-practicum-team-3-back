@@ -30,6 +30,8 @@ function authMiddleware(req, res, next) {
     req.user = {
       id: decoded.userId,
       email: decoded.email,
+      firstName: decoded.firstName,
+      lastName: decoded.lastName,
     };
     next();
   } catch (err) {

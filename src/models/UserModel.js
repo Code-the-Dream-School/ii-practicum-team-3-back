@@ -20,14 +20,14 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide Password"],
       minlength: 6,
     },
-    first_name: {
+    firstName: {
       type: String,
       required: [true, "Please provide First Name"],
       minlength: 1,
       maxlength: 35,
     },
 
-    last_name: {
+    lastName: {
       type: String,
       required: [true, "Please provide Last Name"],
       minlength: 1,
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
     },
     refreshTokenExpiresAt: {
       type: Date,
-      default: () => new Date(Date.now() + 24 * 60 * 60 * 1000),
+      default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   },
   { timestamps: true }
@@ -62,8 +62,9 @@ userSchema.methods.createJWT = function () {
   return jwt.sign(
     {
       userId: this._id,
-      firstName: this.first_name,
-      lastName: this.last_name,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
@@ -79,25 +80,6 @@ userSchema.methods.createRefreshToken = function () {
 userSchema.methods.comparePassword = async function (enteredPassword) {
   const isMatch = await bcrypt.compare(enteredPassword, this.password);
   return isMatch;
-};
-
-userSchema.statics.checkExistUser = async function (body) {
-  const { email, password } = body;
-
-  if (!email || !password) {
-    return null;
-  }
-
-  const user = await this.findOne({ email });
-  if (!user) {
-    return null;
-  }
-
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    return null;
-  }
-  return user;
 };
 
 const User = mongoose.model("User", userSchema);

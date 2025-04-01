@@ -1,5 +1,9 @@
 import express from "express";
 const app = express();
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import cors from "cors";
 import favicon from "express-favicon";
 import logger from "morgan";
@@ -15,9 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.static("public"));
-app.use(favicon(__dirname + "/public/favicon.ico"));
+app.use(favicon(path.join(__dirname, "../public/favicon.ico")));
 
 // routes
 app.use("/api/v1", mainRouter);
 app.use("/api/v1/auth", authRoutes);
-module.exports = app;
+export default app;

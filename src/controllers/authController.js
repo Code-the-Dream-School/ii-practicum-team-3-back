@@ -1,9 +1,12 @@
 import User from "../models/UserModel.js";
-import userService from "../services/userServices.js";
+import {
+  findByEmail,
+  createUser,
+  updateUser,
+} from "../../services/userService.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
@@ -12,19 +15,15 @@ const LOCK_TIME = 15 * 60 * 1000;
 
 async function register(req, res) {
   try {
-    const { email, password, first_name, last_name } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
-    if (!email || !password || !first_name || !last_name) {
+    if (!email || !password || !firstName || !lastName) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Please provide all required fields" });
     }
 
-    const existingUser = await userService.findByEmailOrUsername(
-      email,
-      first_name,
-      last_name
-    );
+    const existingUser = await findByEmail(email);
     if (existingUser) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -34,11 +33,11 @@ async function register(req, res) {
     const newUserData = {
       email,
       password,
-      last_name,
-      last_name,
+      firstName,
+      lastName,
     };
 
-    const user = await userService.createUser(newUserData);
+    const user = await createUser(newUserData);
 
     const accessToken = user.createJWT();
     const refreshToken = user.createRefreshToken();
@@ -56,8 +55,8 @@ async function register(req, res) {
     res.status(StatusCodes.CREATED).json({
       user: {
         id: user._id.toString(),
-        name: user.first_name,
-        surname: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       accessToken,
     });
@@ -96,7 +95,7 @@ async function login(req, res) {
         .json({ message: "Too many login attempts. Please try again later." });
     }
 
-    const user = await userService.findByEmail(email, true);
+    const user = await findByEmail(email, true);
     if (!user || !(await user.comparePassword(password))) {
       if (!loginAttempts[ip]) {
         loginAttempts[ip] = { count: 1, firstAttempt: now };
@@ -140,8 +139,8 @@ async function login(req, res) {
     res.status(StatusCodes.OK).json({
       user: {
         id: user._id.toString(),
-        name: user.first_name,
-        surname: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
       accessToken,
     });
@@ -163,7 +162,7 @@ async function logout(req, res) {
           process.env.JWT_REFRESH_SECRET
         );
 
-        await userService.updateUser(decoded.userId, { refreshToken: "" });
+        await updateUser(decoded.userId, { refreshToken: "" });
       } catch (err) {}
     }
     res.clearCookie("refreshToken", { httpOnly: true, sameSite: "Strict" });
