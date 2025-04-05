@@ -1,5 +1,6 @@
 import User from "../models/UserModel.js";
 import {
+  getUserById,
   findByEmail,
   createUser,
   updateUser,
@@ -124,11 +125,11 @@ async function login(req, res) {
       delete loginAttempts[ip];
     }
 
-    const accessToken = User.createJWT();
-    const refreshToken = User.createRefreshToken();
+    const accessToken = user.createJWT();
+    const refreshToken = user.createRefreshToken();
 
-    User.refreshToken = refreshToken;
-    await User.save();
+    user.refreshToken = refreshToken;
+    await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -177,4 +178,27 @@ async function logout(req, res) {
   }
 }
 
-export { register, login, logout };
+async function refresh(req, res) {
+  const token = req.cookies.refreshToken;
+
+  if (!token) {
+    return res.status(401).json({ message: "No refresh token provided" });
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    const user = await getUserById(payload.userId, true);
+
+    if (!user || user.refreshToken !== token) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+
+    const newAccessToken = user.createJWT();
+    res.status(200).json({ accessToken: newAccessToken });
+  } catch (err) {
+    console.error("Refresh token error:", err);
+    res.status(403).json({ message: "Token expired or invalid" });
+  }
+}
+
+export { register, login, logout, refresh };
