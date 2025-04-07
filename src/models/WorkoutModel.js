@@ -6,7 +6,7 @@ const WorkoutSchema = new mongoose.Schema({
     description: { type: String },
     exercises: [
       {
-        exercise: { type: mongoose.Schema.Types.ObjectId, ref: "Exercise" },
+        exerciseId: { type: String, ref: 'Exercise', required: true }, 
         sets: { type: Number, default: 3 },
         reps: { type: Number, default: 10 },
       },
