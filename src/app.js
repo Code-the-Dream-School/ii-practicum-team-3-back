@@ -6,7 +6,9 @@ import logger from "morgan";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import xss from "xss-clean";
+import authUser from "./middleware/authMiddleware.js"
 import authRoutes from "./routes/authRouter.js";
+import exercisesRouter from "./routes/exerciseRouter.js"
 
 // middleware
 app.use(helmet());
@@ -21,4 +23,6 @@ app.use(express.static("public"));
 // routes
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/exercises", exercisesRouter); 
+// app.use("/exercises",authUser, exercisesRouter); 
 export default app;

@@ -5,7 +5,8 @@
   "description": "Back-End Repo for Team 3 of Ibis/Impala Practicum",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test": "node scripts/loadExercises.js"
   },
   "author": "",
   "license": "ISC",
