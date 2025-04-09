@@ -182,7 +182,9 @@ async function refresh(req, res) {
   const token = req.cookies.refreshToken;
 
   if (!token) {
-    return res.status(401).json({ message: "No refresh token provided" });
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: "No refresh token provided",
+    });
   }
 
   try {
@@ -190,14 +192,20 @@ async function refresh(req, res) {
     const user = await getUserById(payload.userId, true);
 
     if (!user || user.refreshToken !== token) {
-      return res.status(403).json({ message: "Invalid refresh token" });
+      return res.status(StatusCodes.FORBIDDEN).json({
+        message: "Invalid refresh token",
+      });
     }
 
     const newAccessToken = user.createJWT();
-    res.status(200).json({ accessToken: newAccessToken });
+    return res.status(StatusCodes.OK).json({
+      accessToken: newAccessToken,
+    });
   } catch (err) {
     console.error("Refresh token error:", err);
-    res.status(403).json({ message: "Token expired or invalid" });
+    return res.status(StatusCodes.FORBIDDEN).json({
+      message: "Token expired or invalid",
+    });
   }
 }
 
