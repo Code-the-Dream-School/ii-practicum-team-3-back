@@ -1,20 +1,24 @@
-const express = require('express');
+import express from "express";
 const app = express();
-const cors = require('cors')
-const favicon = require('express-favicon');
-const logger = require('morgan');
+import cors from "cors";
 
-const mainRouter = require('./routes/mainRouter.js');
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import xss from "xss-clean";
+import authRoutes from "./routes/authRouter.js";
 
 // middleware
+app.use(helmet());
+app.use(xss());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(logger('dev'));
-app.use(express.static('public'))
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(cookieParser());
+app.use(logger("dev"));
+app.use(express.static("public"));
 
 // routes
-app.use('/api/v1', mainRouter);
 
-module.exports = app;
+app.use("/api/v1/auth", authRoutes);
+export default app;
