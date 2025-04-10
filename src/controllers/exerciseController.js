@@ -1,57 +1,49 @@
 import Exercise from "../models/ExerciseModel.js";
 
-
 // Get all exercises
 export const getAllExercises = async (req, res) => {
-    try {
-        const exercises = await Exercise.find();
-        res.json(exercises)
-    } catch (error) {
-        res.status(500).json({ message: error.message})
-    }
-}
+  try {
+    const { name, bodyPart, equipment, target } = req.query;
+    let result = await Exercise.find();
 
-// Get exercises by body part
-export const getExercisesByBodyPart = async (req, res) => {
-    try {
-        const exercises = await Exercise.find({ bodyPart: req.params.bodyPart});
-        res.json(exercises)
-    } catch (error) {
-        res.status(500).json({ message: error.message})
+    if (name) {
+      result = result.filter((ex) =>
+        ex.name.toLowerCase().includes(name.toLowerCase())
+      );
     }
+
+    if (bodyPart) {
+      result = result.filter(
+        (ex) => ex.bodyPart.toLowerCase() === bodyPart.toLowerCase()
+      );
+    }
+
+    if (equipment) {
+      result = result.filter(
+        (ex) =>
+          ex.equipment.toLowerCase() === equipment.toLowerCase()
+      );
+    }
+
+    if (target) {
+      result = result.filter(
+        (ex) => ex.target.toLowerCase() === target.toLowerCase()
+      );
+    }
+
+    res.json({
+      success: true,
+      count: result.length,
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
 };
 
-// Get exercises by equipment
-export const getExercisesByEquipment = async (req, res) => {
-    try {
-        const exercises = await Exercise.find ({ equipment: req.params.equipment })
-        res.json(exercises)
-    } catch(error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Search exercises by name
-export const searchExercises = async (req, res) => {
-    try {
-      const searchTerm = req.query.name;
-      const exercises = await Exercise.find({
-        name:  { $regex: searchTerm, $options: "i" },
-      });
-      res.json(exercises);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-// Get exercises by target muscle
-export const getExercisesByTargetMuscle = async (req, res) => {
-    try{
-        const exercises = await Exercise.find( {target: req.params.target });
-        res.json(exercises)
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 
