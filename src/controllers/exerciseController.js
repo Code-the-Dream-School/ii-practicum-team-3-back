@@ -3,7 +3,7 @@ import Exercise from "../models/ExerciseModel.js";
 // Get all exercises
 export const getAllExercises = async (req, res) => {
   try {
-    const { name, bodyPart, equipment, target } = req.query;
+    const { name, bodyPart, equipment, target} = req.query;
     let result = await Exercise.find();
 
     if (name) {
