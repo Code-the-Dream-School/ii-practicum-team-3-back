@@ -1,35 +1,36 @@
 import Exercise from "../models/ExerciseModel.js";
+import { StatusCodes } from "http-status-codes"; 
 
 // Get all exercises
+
 export const getAllExercises = async (req, res) => {
   try {
-    const { name, bodyPart, equipment, target} = req.query;
-    let result = await Exercise.find();
+    const { name, bodyPart, equipment, target, secondaryMuscles } = req.query;
+    const filters = {};
 
     if (name) {
-      result = result.filter((ex) =>
-        ex.name.toLowerCase().includes(name.toLowerCase())
-      );
+      filters.name = { $regex: new RegExp(name, "i") };
     }
 
     if (bodyPart) {
-      result = result.filter(
-        (ex) => ex.bodyPart.toLowerCase() === bodyPart.toLowerCase()
-      );
+      filters.bodyPart = { $regex: new RegExp(bodyPart, "i") };
     }
 
     if (equipment) {
-      result = result.filter(
-        (ex) =>
-          ex.equipment.toLowerCase() === equipment.toLowerCase()
-      );
+      filters.equipment = { $regex: new RegExp(equipment, "i") };
     }
 
     if (target) {
-      result = result.filter(
-        (ex) => ex.target.toLowerCase() === target.toLowerCase()
-      );
+      filters.target = { $regex: new RegExp(target, "i") };
     }
+
+    if (secondaryMuscles) {
+      filters.secondaryMuscles = { $regex: new RegExp(secondaryMuscles, "i") };
+    }
+
+    // respond
+
+    const result = await Exercise.find(filters);
 
     res.json({
       success: true,
@@ -38,12 +39,9 @@ export const getAllExercises = async (req, res) => {
     });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Server error",
     });
   }
 };
-
-
-
