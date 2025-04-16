@@ -118,8 +118,11 @@ export const getAllWorkouts = async (req, res) => {
       .skip(skip)
       .limit(limitNumber)
       .populate("createdBy", "email") // Only include creator's email
-      .populate("exercises.exerciseId", "name target") 
-      .lean(); // Return plain JS objects
+      .populate({
+        path: "exercises.exerciseId",
+        select: "name target bodyPart equipment gifUrl secondaryMuscles instructions",
+      })
+      .lean(); 
 
     // Get total count for pagination info
     const totalItems = await Workout.countDocuments(query);
@@ -145,14 +148,21 @@ export const getAllWorkouts = async (req, res) => {
         createdBy: workout.createdBy?._id || null, // Only return ID
         createdAt: workout.createdAt,
         originalWorkoutId: workout.originalWorkoutId || null,
-        exercises: workout.exercises?.map(ex => ({
-          exerciseId: ex.exerciseId?._id || null,
-          sets: ex.sets,
-          reps: ex.reps,
-          exerciseName: ex.exerciseId?.name || null,
-          exerciseTarget: ex.exerciseId?.target || null
-        })) || [] // Empty array if no exercises
-      }))
+
+    exercises: workout.exercises?.map(ex => ({
+      exerciseId: ex.exerciseId?._id || null,
+      sets: ex.sets,
+      reps: ex.reps,
+      exerciseName: ex.exerciseId?.name || null,
+      exerciseTarget: ex.exerciseId?.target || null,
+      // Add these new fields:
+      bodyPart: ex.exerciseId?.bodyPart || null,
+      equipment: ex.exerciseId?.equipment || null,
+      gifUrl: ex.exerciseId?.gifUrl || null,
+      secondaryMuscles: ex.exerciseId?.secondaryMuscles || [],
+      instructions: ex.exerciseId?.instructions || [] // Empty array if no exercises
+    })) || []  
+    })) 
     };
 
     res.status(200).json(response);
