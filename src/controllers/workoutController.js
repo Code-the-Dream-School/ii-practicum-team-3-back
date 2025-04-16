@@ -55,13 +55,13 @@ export const getAllWorkouts = async (req, res) => {
     }
 
     // Validate level against enum values
-    // if (level) {
-    //   if (VALID_LEVELS.includes(level)) {
-    //     query.level = level;
-    //   } else {
-    //     validationErrors.push(`Invalid level. Allowed values: ${VALID_LEVELS.join(', ')}`);
-    //   }
-    // }
+    if (level) {
+      if (VALID_LEVELS.includes(level)) {
+        query.level = level;
+      } else {
+        validationErrors.push(`Invalid level. Allowed values: ${VALID_LEVELS.join(', ')}`);
+      }
+    }
 
     // Validate gender against enum values
     if (gender) {
