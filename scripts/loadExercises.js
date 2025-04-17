@@ -12,7 +12,7 @@ if (!mongoUri) {
   throw new Error('MONGO_URI is not defined in the environment variables');
 }
 
-const exercisesPath = path.join(process.cwd(), 'data', 'all_exs.json');
+const exercisesPath = path.join(process.cwd(), 'db', 'exercises_updated.json');
 
 const loadExercises = async () => {
     try {
