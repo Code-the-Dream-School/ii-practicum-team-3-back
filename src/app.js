@@ -25,6 +25,5 @@ app.use(express.static("public"));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/exercises", exercisesRouter); 
-app.use("/api/v1/workouts", workoutRouter); 
 // app.use("/exercises",authUser, exercisesRouter); 
 export default app;
