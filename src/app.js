@@ -1,17 +1,20 @@
 import express from "express";
 const app = express();
-import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
+import cors from "cors";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import xss from "xss-clean";
 import authRoutes from "./routes/authRouter.js";
 
+
 // middleware
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
