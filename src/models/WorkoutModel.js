@@ -63,9 +63,9 @@ const WorkoutSchema = new mongoose.Schema({
 
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     isTemplate: {
-        type: Boolean,
-        default: false
-      },
+      type: Boolean,
+      default: false
+    },
     originalWorkoutId: { type: mongoose.Schema.Types.ObjectId, ref: "Workout", default: null }, 
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

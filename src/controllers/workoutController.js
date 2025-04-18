@@ -1,5 +1,6 @@
 import Workout from "../models/WorkoutModel.js";
 import mongoose from "mongoose";
+import { StatusCodes } from 'http-status-codes'; 
 
 // Valid values from model schema
 const VALID_GENDERS = ["Male", "Female"];
@@ -100,7 +101,7 @@ export const getAllWorkouts = async (req, res) => {
 
     // Return all validation errors at once
     if (validationErrors.length > 0) {
-      return res.status(400).json({
+      return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: "Request validation failed",
         errors: validationErrors
@@ -165,11 +166,11 @@ export const getAllWorkouts = async (req, res) => {
     })) 
     };
 
-    res.status(200).json(response);
+    res.status(StatusCodes.OK).json(response);
 
   } catch (error) {
     console.error("Database query error:", error);
-    res.status(500).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: "Internal server error while fetching workouts",
       error: process.env.NODE_ENV === 'development' ? error.message : undefined

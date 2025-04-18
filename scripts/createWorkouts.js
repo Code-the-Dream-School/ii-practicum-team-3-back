@@ -8,6 +8,8 @@ dotenv.config();
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const mongoUri = process.env.MONGO_URI;
+const EXERCISE_LIMIT = parseInt(process.env.EXERCISE_LIMIT, 10); 
+
 
 // Validate environment variables
 if (!mongoUri) {
@@ -39,6 +41,15 @@ const predefinedWorkouts = [
       level: "Beginner",
     },
     {
+      name: "Core Strength for Beginners",
+      description: "Beginner core workout focusing on abs and waist area.",
+      target: "abs",
+      gender: "Male",
+      age: { from: 18, to: 30 },
+      weight: { from: 110, to: 164 }, // 
+      level: "Beginner",
+    },
+    {
       name: "Full Body Bodyweight Blast",
       description: "Bodyweight workout engaging full body with minimal equipment.",
       target: "glutes",
@@ -66,11 +77,29 @@ const predefinedWorkouts = [
       level: "Beginner",
     },
     {
+      name: "Upper legs",
+      description: "Upper legs with minimal equipment.",
+      target: "hamstrings",
+      gender: "Female",
+      age: { from: 35, to: 45 },
+      weight: { from: 143, to: 187 }, // 65-85 кг
+      level: "Beginner",
+    },
+    {
       name: "Arm Sculptor Starter",
       description: "Beginner-friendly arm workout to build definition and strength.",
       target: "biceps",
       gender: "Female",
       age: { from: 18, to: 35 },
+      weight: { from: 110, to: 154 },
+      level: "Beginner",
+    },
+    {
+      name: "For Arm",
+      description: "Arm workout.",
+      target: "biceps",
+      gender: "Male",
+      age: { from: 20, to: 35 },
       weight: { from: 110, to: 154 },
       level: "Beginner",
     },
@@ -106,12 +135,13 @@ const createTemplateWorkouts = async () => {
       validateWorkoutConfig(config);
 
       // Find exercises in MongoDB based on target muscle group
-      const exercises = await Exercise.find({ target: config.target }).limit(5);
+      const exercises = await Exercise.find({ target: config.target }).limit(EXERCISE_LIMIT);
 
-      if (!exercises.length) {
-        console.warn(`No exercises found for target: ${config.target}`);
-        continue;
-      }
+      if (exercises.length < EXERCISE_LIMIT) {
+        console.warn(`Not enough exercises found for target: ${config.target}. Found ${exercises.length} exercises.`);
+        continue;  
+    }
+    
 
       // Map exercises to workout structure with reasonable sets/reps
 
