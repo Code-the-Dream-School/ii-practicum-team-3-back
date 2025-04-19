@@ -5,6 +5,7 @@ import {
   createUser,
   updateUser,
 } from "../../services/userService.js";
+import { sendResetEmail } from "../services/emailService.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -209,4 +210,78 @@ async function refresh(req, res) {
   }
 }
 
-export { register, login, logout, refresh };
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email is required" });
+    }
+
+    const user = await findByEmail(email);
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "User not found" });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000;
+
+    await user.save();
+
+    await sendResetEmail(user.email, token);
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Password reset link sent" });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong. Try again later.",
+    });
+  }
+}
+
+async function resetPassword(req, res) {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Token and new password are required" });
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(StatusCodes.FORBIDDEN)
+        .json({ message: "Invalid or expired token" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Password has been reset" });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong. Try again later.",
+    });
+  }
+}
+export { register, login, logout, refresh, forgotPassword, resetPassword };
