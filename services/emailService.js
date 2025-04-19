@@ -23,6 +23,7 @@ async function sendResetEmail(email, token) {
         <p>This link will expire in 1 hour.</p>
       `,
   };
+  console.log("RESET LINK:", resetUrl); // delete it after we finish app (needs for check a token)
 
   await transporter.sendMail(message);
 }

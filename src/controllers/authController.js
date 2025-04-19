@@ -5,10 +5,11 @@ import {
   createUser,
   updateUser,
 } from "../../services/userService.js";
-import { sendResetEmail } from "../services/emailService.js";
+import { sendResetEmail } from "../../services/emailService.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
@@ -228,7 +229,7 @@ async function forgotPassword(req, res) {
         .json({ message: "User not found" });
     }
 
-    const token = crypto.randomBytes(32).toString("hex");
+    const token = randomBytes(32).toString("hex");
     user.resetPasswordToken = token;
     user.resetPasswordExpires = Date.now() + 3600000;
 
@@ -268,7 +269,7 @@ async function resetPassword(req, res) {
         .json({ message: "Invalid or expired token" });
     }
 
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 
