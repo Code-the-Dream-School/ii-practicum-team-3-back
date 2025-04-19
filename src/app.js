@@ -12,6 +12,7 @@ import authUser from "./middleware/authMiddleware.js"
 import authRoutes from "./routes/authRouter.js";
 
 import exercisesRouter from "./routes/exerciseRouter.js"
+import workoutRouter from "./routes/workoutRouter.js"
 
 // middleware
 app.use(
@@ -33,5 +34,6 @@ app.use(express.static("public"));
 // routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/exercises", exercisesRouter); 
+app.use("/api/v1/workouts", workoutRouter); 
 // app.use("/exercises",authUser, exercisesRouter); 
 export default app;
