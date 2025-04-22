@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
 
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
+function authMiddleware(req, res, next) { 
 
+  const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
@@ -11,7 +11,6 @@ function authMiddleware(req, res, next) {
   }
 
   const token = authHeader.split(" ")[1];
-
   if (!token) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
