@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
-    resetPasswordToken: hashedToken,
+    resetPasswordToken: String,
     resetPasswordExpires: Date,
   },
   { timestamps: true }
