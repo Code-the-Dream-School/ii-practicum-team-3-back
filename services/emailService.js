@@ -25,7 +25,11 @@ async function sendResetEmail(email, token) {
   };
   console.log("RESET LINK:", resetUrl); // delete it after we finish app (needs for check a token)
 
-  await transporter.sendMail(message);
+  try {
+    await transporter.sendMail(message);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
 }
 
 export { sendResetEmail };

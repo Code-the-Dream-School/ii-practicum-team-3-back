@@ -9,7 +9,7 @@ import { sendResetEmail } from "../../services/emailService.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
@@ -229,13 +229,14 @@ async function forgotPassword(req, res) {
         .json({ message: "User not found" });
     }
 
-    const token = randomBytes(32).toString("hex");
-    user.resetPasswordToken = token;
+    const rawToken = randomBytes(32).toString("hex");
+    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    user.resetPasswordToken = hashedToken;
     user.resetPasswordExpires = Date.now() + 3600000;
 
     await user.save();
 
-    await sendResetEmail(user.email, token);
+    await sendResetEmail(user.email, rawToken);
     return res
       .status(StatusCodes.OK)
       .json({ message: "Password reset link sent" });
@@ -257,9 +258,10 @@ async function resetPassword(req, res) {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Token and new password are required" });
     }
+    const hashedToken = createHash("sha256").update(token).digest("hex");
 
     const user = await User.findOne({
-      resetPasswordToken: token,
+      resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() },
     });
 
