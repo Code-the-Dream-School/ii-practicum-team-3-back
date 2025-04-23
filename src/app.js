@@ -1,11 +1,14 @@
 import express from "express";
 const app = express();
+import dotenv from "dotenv";
+dotenv.config();
+
 import cors from "cors";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import xss from "xss-clean";
-import authUser from "./middleware/authMiddleware.js"
+import authUser from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/authRouter.js";
 import exercisesRouter from "./routes/exerciseRouter.js"
 import workoutRouter from "./routes/workoutRouter.js"
@@ -14,9 +17,15 @@ import userWorkoutRouter from "./routes/userWorkout.js";
 
 
 // middleware
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
+
 app.use(helmet());
 app.use(xss());
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

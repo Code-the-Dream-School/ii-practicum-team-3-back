@@ -5,9 +5,11 @@ import {
   createUser,
   updateUser,
 } from "../../services/userService.js";
+import { sendResetEmail } from "../../services/emailService.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { randomBytes, createHash } from "crypto";
 
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
@@ -209,4 +211,80 @@ async function refresh(req, res) {
   }
 }
 
-export { register, login, logout, refresh };
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email is required" });
+    }
+
+    const user = await findByEmail(email);
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "User not found" });
+    }
+
+    const rawToken = randomBytes(32).toString("hex");
+    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 3600000;
+
+    await user.save();
+
+    await sendResetEmail(user.email, rawToken);
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Password reset link sent" });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong. Try again later.",
+    });
+  }
+}
+
+async function resetPassword(req, res) {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Token and new password are required" });
+    }
+    const hashedToken = createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(StatusCodes.FORBIDDEN)
+        .json({ message: "Invalid or expired token" });
+    }
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: "Password has been reset" });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong. Try again later.",
+    });
+  }
+}
+export { register, login, logout, refresh, forgotPassword, resetPassword };

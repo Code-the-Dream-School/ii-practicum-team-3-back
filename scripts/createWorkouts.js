@@ -137,16 +137,13 @@ const createTemplateWorkouts = async () => {
       validateWorkoutConfig(config);
 
       // Find exercises in MongoDB based on target muscle group
-      const exercises = await Exercise.find({ target: config.target }).limit(
-        EXERCISE_LIMIT
-      );
+      const exercises = await Exercise.find({ target: config.target }).limit(EXERCISE_LIMIT);
 
       if (exercises.length < EXERCISE_LIMIT) {
-        console.warn(
-          `Not enough exercises found for target: ${config.target}. Found ${exercises.length} exercises.`
-        );
-        continue;
-      }
+        console.warn(`Not enough exercises found for target: ${config.target}. Found ${exercises.length} exercises.`);
+        continue;  
+    }
+    
 
       // Map exercises to workout structure with reasonable sets/reps
 
