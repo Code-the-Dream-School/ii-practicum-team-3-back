@@ -7,17 +7,6 @@ export const saveWorkoutForUser = async (req, res) => {
     console.log('\n=== CONTROLLER START ===');
     console.log('Request user:', req.user);
     
-    if (!req.user?.id) {
-      console.error('Authentication failed - no user data');
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Authentication required",
-        debug: process.env.NODE_ENV === 'development' ? {
-          receivedUser: req.user,
-          headers: req.headers
-        } : undefined
-      });
-    }
 
     const userId = req.user.id;
     console.log('Processing request for user:', userId);
@@ -43,7 +32,7 @@ export const saveWorkoutForUser = async (req, res) => {
     const { workoutId } = req.params;
     console.log('Received workoutId:', workoutId);
 
-    if (!workoutId || !mongoose.Types.ObjectId.isValid(workoutId)) {
+    if (!mongoose.Types.ObjectId.isValid(workoutId)) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: "Invalid workout ID format",

@@ -8,13 +8,13 @@ const router = express.Router();
 
 
 router.post(
-  '/:workoutId/save',
+  '/:workoutId',
   authMiddleware, 
   saveWorkoutForUser 
 );
-router.get("/saved", authMiddleware, getSavedWorkouts);
+router.get("/all", authMiddleware, getSavedWorkouts);
 router.delete(
-  '/saved/:workoutId',
+  '/:workoutId',
   authMiddleware,
   deleteUserWorkout
 );

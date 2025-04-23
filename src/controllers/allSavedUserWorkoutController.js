@@ -3,12 +3,6 @@ import { StatusCodes } from "http-status-codes";
 
 const getUserSavedWorkouts = async (req, res) => {
   try {
-    // Auth
-    if (!req.user?.id) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ 
-        message: "Unauthorized: User ID missing" 
-      });
-    }
 
     const userId = req.user.id;
     console.log("Fetching workouts for user:", userId);
@@ -16,32 +10,49 @@ const getUserSavedWorkouts = async (req, res) => {
     // Find and populate
     const workouts = await Workout.find(
       { createdBy: userId, isTemplate: false },
-      { __v: 0 }
-    ).populate({
+    )
+    .populate({
       path: "exercises.exerciseId",
-      select: "-__v" 
+    }) 
+    .lean();
+
+    const formattedWorkouts = workouts.map(workout => {
+      // Преобразуем в чистый объект, если это документ Mongoose
+      const workoutObj = workout.toObject ? workout.toObject() : workout;
+      
+      return {
+        ...workoutObj,
+        exercises: workoutObj.exercises.map(ex => {
+          // Деструктурируем exerciseId для удобства
+          const { name, target, bodyPart, equipment, gifUrl, secondaryMuscles, instructions, _id } = ex.exerciseId || {};
+          
+          return {
+            // Основные данные упражнения из workout
+            sets: ex.sets,
+            reps: ex.reps,
+            _id: ex._id,
+            
+            // Данные из связанной модели Exercise
+            exerciseName: name,
+            exerciseTarget: target,
+            bodyPart,
+            equipment,
+            gifUrl,
+            secondaryMuscles: secondaryMuscles || [], // Защита от undefined
+            instructions: instructions || [],
+            exerciseId: _id
+          };
+        })
+      };
     });
-
-    const formattedWorkouts = workouts.map(workout => ({
-      ...workout.toObject(),
-      exercises: workout.exercises.map(ex => ({
-        ...ex,
-        exerciseName: ex.exerciseId?.name,
-        exerciseTarget: ex.exerciseId?.target,
-        bodyPart: ex.exerciseId?.bodyPart,
-        equipment: ex.exerciseId?.equipment,
-        gifUrl: ex.exerciseId?.gifUrl,
-        secondaryMuscles: ex.exerciseId?.secondaryMuscles,
-        instructions: ex.exerciseId?.instructions,
-        exerciseId: ex.exerciseId?._id
-      }))
-    }));
-
+    
     res.status(StatusCodes.OK).json({
-        success: true,
-        count: workouts.length,
-        data: formattedWorkouts
+      success: true,
+      count: workouts.length,
+      data: formattedWorkouts
     });
+
+
 
   } catch (error) {
     console.error("Error fetching user workouts:", error);

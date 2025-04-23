@@ -9,7 +9,7 @@ import authUser from "./middleware/authMiddleware.js"
 import authRoutes from "./routes/authRouter.js";
 import exercisesRouter from "./routes/exerciseRouter.js"
 import workoutRouter from "./routes/workoutRouter.js"
-import saveWorkoutRouter from "./routes/saveWorkout.js";  
+import userWorkoutRouter from "./routes/userWorkout.js";  
 
 
 
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/workouts", workoutRouter); 
 app.use("/api/v1/exercises", exercisesRouter); 
-app.use("/api/v1/saveworkouts", saveWorkoutRouter); 
+app.use("/api/v1/saved-workouts", userWorkoutRouter); 
 
 
 export default app;

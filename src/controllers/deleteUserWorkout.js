@@ -4,13 +4,6 @@ import mongoose from "mongoose";
 
 const deleteUserWorkout = async (req, res) => {
   try {
-    // Auth
-    if (!req.user?.id) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Authentication required"
-      });
-    }
 
     const userId = req.user.id;
     const { workoutId } = req.params;
