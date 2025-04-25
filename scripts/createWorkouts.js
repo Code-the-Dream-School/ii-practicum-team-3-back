@@ -8,8 +8,7 @@ dotenv.config();
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const mongoUri = process.env.MONGO_URI;
-const EXERCISE_LIMIT = parseInt(process.env.EXERCISE_LIMIT, 10); 
-
+const EXERCISE_LIMIT = parseInt(process.env.EXERCISE_LIMIT, 10);
 
 // Validate environment variables
 if (!mongoUri) {
@@ -31,88 +30,91 @@ mongoose.connection.on("disconnected", () => {
 });
 
 const predefinedWorkouts = [
-    {
-      name: "Core Strength for Beginners",
-      description: "Beginner core workout focusing on abs and waist area.",
-      target: "abs",
-      gender: "Female",
-      age: { from: 18, to: 30 },
-      weight: { from: 110, to: 154 }, // 50-70 кг
-      level: "Beginner",
-    },
-    {
-      name: "Core Strength for Beginners",
-      description: "Beginner core workout focusing on abs and waist area.",
-      target: "abs",
-      gender: "Male",
-      age: { from: 18, to: 30 },
-      weight: { from: 110, to: 164 }, // 
-      level: "Beginner",
-    },
-    {
-      name: "Full Body Bodyweight Blast",
-      description: "Bodyweight workout engaging full body with minimal equipment.",
-      target: "glutes",
-      gender: "Male",
-      age: { from: 20, to: 35 },
-      weight: { from: 143, to: 187 }, // 65-85 кг
-      level: "Intermediate",
-    },
-    {
-      name: "Back",
-      description: "Focused workout on back.",
-      target: "lats",
-      gender: "Male",
-      age: { from: 25, to: 40 },
-      weight: { from: 154, to: 198 }, // 70-90 кг
-      level: "Advanced",
-    },
-    {
-      name: "Upper legs",
-      description: "Upper legs with minimal equipment.",
-      target: "hamstrings",
-      gender: "Male",
-      age: { from: 35, to: 45 },
-      weight: { from: 143, to: 187 }, // 65-85 кг
-      level: "Beginner",
-    },
-    {
-      name: "Upper legs",
-      description: "Upper legs with minimal equipment.",
-      target: "hamstrings",
-      gender: "Female",
-      age: { from: 35, to: 45 },
-      weight: { from: 143, to: 187 }, // 65-85 кг
-      level: "Beginner",
-    },
-    {
-      name: "Arm Sculptor Starter",
-      description: "Beginner-friendly arm workout to build definition and strength.",
-      target: "biceps",
-      gender: "Female",
-      age: { from: 18, to: 35 },
-      weight: { from: 110, to: 154 },
-      level: "Beginner",
-    },
-    {
-      name: "For Arm",
-      description: "Arm workout.",
-      target: "biceps",
-      gender: "Male",
-      age: { from: 20, to: 35 },
-      weight: { from: 110, to: 154 },
-      level: "Beginner",
-    },
-    {
-      name: "Chest & Shoulders Power",
-      description: "Intermediate level upper body workout with compound movements.",
-      target: "pectorals",
-      gender: "Male",
-      age: { from: 20, to: 40 },
-      weight: { from: 143, to: 187 },
-      level: "Intermediate",
-    }
-  ];
+  {
+    name: "Core Strength for Beginners",
+    description: "Beginner core workout focusing on abs and waist area.",
+    target: "abs",
+    gender: "Female",
+    age: { from: 18, to: 30 },
+    weight: { from: 110, to: 154 }, // 50-70 кг
+    level: "Beginner",
+  },
+  {
+    name: "Core Strength for Beginners",
+    description: "Beginner core workout focusing on abs and waist area.",
+    target: "abs",
+    gender: "Male",
+    age: { from: 18, to: 30 },
+    weight: { from: 110, to: 164 }, //
+    level: "Beginner",
+  },
+  {
+    name: "Full Body Bodyweight Blast",
+    description:
+      "Bodyweight workout engaging full body with minimal equipment.",
+    target: "glutes",
+    gender: "Male",
+    age: { from: 20, to: 35 },
+    weight: { from: 143, to: 187 }, // 65-85 кг
+    level: "Intermediate",
+  },
+  {
+    name: "Back",
+    description: "Focused workout on back.",
+    target: "lats",
+    gender: "Male",
+    age: { from: 25, to: 40 },
+    weight: { from: 154, to: 198 }, // 70-90 кг
+    level: "Advanced",
+  },
+  {
+    name: "Upper legs",
+    description: "Upper legs with minimal equipment.",
+    target: "hamstrings",
+    gender: "Male",
+    age: { from: 35, to: 45 },
+    weight: { from: 143, to: 187 }, // 65-85 кг
+    level: "Beginner",
+  },
+  {
+    name: "Upper legs",
+    description: "Upper legs with minimal equipment.",
+    target: "hamstrings",
+    gender: "Female",
+    age: { from: 35, to: 45 },
+    weight: { from: 143, to: 187 }, // 65-85 кг
+    level: "Beginner",
+  },
+  {
+    name: "Arm Sculptor Starter",
+    description:
+      "Beginner-friendly arm workout to build definition and strength.",
+    target: "biceps",
+    gender: "Female",
+    age: { from: 18, to: 35 },
+    weight: { from: 110, to: 154 },
+    level: "Beginner",
+  },
+  {
+    name: "For Arm",
+    description: "Arm workout.",
+    target: "biceps",
+    gender: "Male",
+    age: { from: 20, to: 35 },
+    weight: { from: 110, to: 154 },
+    level: "Beginner",
+  },
+  {
+    name: "Chest & Shoulders Power",
+    description:
+      "Intermediate level upper body workout with compound movements.",
+    target: "pectorals",
+    gender: "Male",
+    age: { from: 20, to: 40 },
+    weight: { from: 143, to: 187 },
+    level: "Intermediate",
+  },
+];
 
 const validateWorkoutConfig = (config) => {
   if (config.age.from >= config.age.to) {
@@ -146,25 +148,25 @@ const createTemplateWorkouts = async () => {
       // Map exercises to workout structure with reasonable sets/reps
 
       let sets;
-let reps;
+      let reps;
 
-switch (config.level) {
-  case "Beginner":
-    sets = 3;
-    reps = 10;
-    break;
-  case "Intermediate":
-    sets = 4;
-    reps = 12;
-    break;
-  case "Advanced":
-    sets = 5;
-    reps = 14;
-    break;
-  default:
-    sets = 3;
-    reps = 10;
-}
+      switch (config.level) {
+        case "Beginner":
+          sets = 3;
+          reps = 10;
+          break;
+        case "Intermediate":
+          sets = 4;
+          reps = 12;
+          break;
+        case "Advanced":
+          sets = 5;
+          reps = 14;
+          break;
+        default:
+          sets = 3;
+          reps = 10;
+      }
       const workoutExercises = exercises.map((ex) => ({
         exerciseId: ex._id,
         sets,

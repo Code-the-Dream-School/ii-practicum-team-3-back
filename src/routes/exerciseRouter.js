@@ -7,4 +7,5 @@ const router = express.Router();
 
 router.get("/", getAllExercises );
 
+
 export default router;
