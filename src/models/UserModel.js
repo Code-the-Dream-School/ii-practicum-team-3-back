@@ -39,6 +39,24 @@ const userSchema = new mongoose.Schema(
       ref: "Workout",
       default: [],
     },
+    age: {
+      type: Number,
+      min: 10,
+      max: 100
+    },
+    weight: {
+      type: Number,
+      min: 30,
+      max: 200
+    },
+    fitnessLevel: {
+      type: String,
+      enum: ['Beginner', 'Intermediate', 'Advanced']
+    },
+    gender: {
+      type: String,
+      enum: ['Male', 'Female']
+    },
     refreshToken: { type: String, default: "" },
     refreshTokenUpdatedAt: {
       type: Date,
