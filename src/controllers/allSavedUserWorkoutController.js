@@ -17,28 +17,24 @@ const getUserSavedWorkouts = async (req, res) => {
     .lean();
 
     const formattedWorkouts = workouts.map(workout => {
-      // Преобразуем в чистый объект, если это документ Mongoose
       const workoutObj = workout.toObject ? workout.toObject() : workout;
       
       return {
         ...workoutObj,
         exercises: workoutObj.exercises.map(ex => {
-          // Деструктурируем exerciseId для удобства
           const { name, target, bodyPart, equipment, gifUrl, secondaryMuscles, instructions, _id } = ex.exerciseId || {};
           
           return {
-            // Основные данные упражнения из workout
             sets: ex.sets,
             reps: ex.reps,
             _id: ex._id,
             
-            // Данные из связанной модели Exercise
             exerciseName: name,
             exerciseTarget: target,
             bodyPart,
             equipment,
             gifUrl,
-            secondaryMuscles: secondaryMuscles || [], // Защита от undefined
+            secondaryMuscles: secondaryMuscles || [], 
             instructions: instructions || [],
             exerciseId: _id
           };
