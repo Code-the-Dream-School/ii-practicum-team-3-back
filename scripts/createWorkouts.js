@@ -55,6 +55,16 @@ const predefinedWorkouts = [
     target: "glutes",
     gender: "Male",
     age: { from: 20, to: 35 },
+    weight: { from: 110, to: 164  }, // 65-85 кг
+    level: "Beginner",
+  },
+  {
+    name: "Full Body Bodyweight Blast",
+    description:
+      "Bodyweight workout engaging full body with minimal equipment.",
+    target: "glutes",
+    gender: "Male",
+    age: { from: 20, to: 35 },
     weight: { from: 143, to: 187 }, // 65-85 кг
     level: "Intermediate",
   },
