@@ -47,7 +47,8 @@ const userSchema = new mongoose.Schema(
     weight: {
       type: Number,
       min: 30,
-      max: 200
+      max: 200,
+      description: 'lbs'
     },
     fitnessLevel: {
       type: String,
