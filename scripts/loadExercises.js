@@ -22,6 +22,11 @@ const loadExercises = async () => {
         });
         console.log('The connection to MongoDB has been successfully established.');
 
+
+        await Exercise.deleteMany({});
+        console.log('All exercises have been deleted.');
+
+
         const exercisesData = JSON.parse(fs.readFileSync(exercisesPath, 'utf-8'));
         console.log('Data from file read');
 
