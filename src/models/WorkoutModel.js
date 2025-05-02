@@ -41,20 +41,20 @@ const WorkoutSchema = new mongoose.Schema({
     },
 
     weight: {
-        from: { 
-          type: Number, 
-          required: true,
-          min: 30,
-          max: 200,
-        },
-        to: { 
-          type: Number, 
-          required: true,
-          min: 30,
-          max: 200,
-        },        
-
+      from: { 
+        type: Number, 
+        required: true,
+        min: 30,
+        max: 300,  // Increased from 60 to 300
+      },
+      to: { 
+        type: Number, 
+        required: true,
+        min: 30,
+        max: 300,  // Increased from 300 to match 'from'
+      },  
     },
+            
     level: {
         type: String, 
         enum: ["Beginner","Intermediate", "Advanced"], 
