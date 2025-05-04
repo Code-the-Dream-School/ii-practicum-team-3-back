@@ -20,10 +20,10 @@ async function updateUserProfile(req, res) {
     });
   }
 
-  user.gender = gender;
-  user.age = age;
-  user.weight = weight;
-  user.fitnessLevel = fitnessLevel;
+  if (gender !== undefined) user.gender = gender;
+  if (age !== undefined) user.age = age;
+  if (weight !== undefined) user.weight = weight;
+  if (fitnessLevel !== undefined) user.fitnessLevel = fitnessLevel;
 
   await user.save();
 
