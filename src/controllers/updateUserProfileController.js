@@ -3,9 +3,9 @@ import { StatusCodes } from "http-status-codes";
 
 async function updateUserProfile(req, res) {
   const userId = req.user.userId;
-  const { gender, age, weight, level } = req.body;
+  const { gender, age, weight, fitnessLevel } = req.body;
 
-  if (!gender || !age || !weight || !level) {
+  if (!gender || !age || !weight || !fitnessLevel) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       success: false,
       message: "Please provide all required fields",
@@ -23,7 +23,7 @@ async function updateUserProfile(req, res) {
   user.gender = gender;
   user.age = age;
   user.weight = weight;
-  user.level = level;
+  user.fitnessLevel = fitnessLevel;
 
   await user.save();
 
