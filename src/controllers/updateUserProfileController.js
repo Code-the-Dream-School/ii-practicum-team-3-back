@@ -2,7 +2,7 @@ import User from "../models/UserModel.js";
 import { StatusCodes } from "http-status-codes";
 
 async function updateUserProfile(req, res) {
-  const userId = req.user.userId;
+  const userId = req.user.id;
   const { gender, age, weight, fitnessLevel } = req.body;
 
   if (!gender || !age || !weight || !fitnessLevel) {

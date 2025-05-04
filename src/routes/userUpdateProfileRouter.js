@@ -4,6 +4,6 @@ import authenticateUser from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.patch("/profile", authenticateUser, updateUserProfile);
+router.patch("/", authenticateUser, updateUserProfile);
 
 export default router;
