@@ -34,29 +34,29 @@ const userSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 35,
     },
-    favoriteWorkouts: {
+    favoriteExercises: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Workout",
+      ref: "Exercise",
       default: [],
     },
     age: {
       type: Number,
       min: 10,
-      max: 100
+      max: 100,
     },
     weight: {
       type: Number,
       min: 30,
-      max: 200,
-      description: 'lbs'
+      max: 300,
+      description: "lbs",
     },
     fitnessLevel: {
       type: String,
-      enum: ['Beginner', 'Intermediate', 'Advanced']
+      enum: ["Beginner", "Intermediate", "Advanced"],
     },
     gender: {
       type: String,
-      enum: ['Male', 'Female']
+      enum: ["Male", "Female"],
     },
     refreshToken: { type: String, default: "" },
     refreshTokenUpdatedAt: {

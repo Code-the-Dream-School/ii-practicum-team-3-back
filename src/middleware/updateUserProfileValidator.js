@@ -8,8 +8,8 @@ export const validateProfileUpdate = [
 
   body("weight")
     .optional()
-    .isFloat({ min: 30, max: 200 })
-    .withMessage("Weight must be a number between 30 and 200 lbs"),
+    .isFloat({ min: 30, max: 300 })
+    .withMessage("Weight must be a number between 30 and 300 lbs"),
 
   body("fitnessLevel")
     .optional()
@@ -19,7 +19,7 @@ export const validateProfileUpdate = [
   body("gender")
     .optional()
     .isIn(["Male", "Female"])
-    .withMessage("Gender must be Male or Female"),
+    .withMessage("Gender must be Male or Female or Other"),
 ];
 
 export const handleValidationErrors = (req, res, next) => {

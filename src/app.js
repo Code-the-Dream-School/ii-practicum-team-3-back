@@ -44,4 +44,15 @@ app.use("/api/v1/saved-workouts", userWorkoutRouter);
 app.use("/api/v1/customized-workout", customWorkoutRoute);
 app.use("/api/v1/profile", userUpdateProfileRouter);
 
+app.use((req, res) => {
+  res.status(404).json({ message: "Page not Found" });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack || err);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+  });
+});
+
 export default app;
