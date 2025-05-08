@@ -1,6 +1,7 @@
 import Exercise from "../models/ExerciseModel.js";
 import { StatusCodes } from "http-status-codes";
 import * as userService from "../../services/userService.js";
+import mongoose from "mongoose";
 
 // Get all exercises
 export const getAllExercises = async (req, res) => {
@@ -118,6 +119,23 @@ export const addFavoriteExercise = async (req, res) => {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: "Exercise not found",
+      });
+    }
+
+    const user = await userService.getUserById(req.user.id);
+    const limit = 30;
+
+    if (user.favoriteExercises.includes(exerciseId)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "Exercise is already in your favorites",
+      });
+    }
+
+    if (user.favoriteExercises.length >= limit) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: `You can only save up to ${limit} favorite exercises`,
       });
     }
 
