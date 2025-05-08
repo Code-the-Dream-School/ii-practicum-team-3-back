@@ -14,6 +14,7 @@ import workoutRouter from "./routes/workoutRouter.js";
 import userWorkoutRouter from "./routes/userWorkout.js";
 import customWorkoutRoute from "./routes/customWorkoutRoute.js";
 import userUpdateProfileRouter from "./routes/userUpdateProfileRouter.js";
+import favoriteExercisesRouter from "./routes/favoriteExercisesRouter.js";
 
 // middleware
 app.use(
@@ -43,6 +44,7 @@ app.use("/api/v1/exercises", exercisesRouter);
 app.use("/api/v1/saved-workouts", userWorkoutRouter);
 app.use("/api/v1/customized-workout", customWorkoutRoute);
 app.use("/api/v1/profile", userUpdateProfileRouter);
+app.use("/api/v1/favorites", favoriteExercisesRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Page not Found" });
