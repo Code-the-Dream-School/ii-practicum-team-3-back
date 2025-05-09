@@ -71,16 +71,25 @@ export const getAllExercises = async (req, res) => {
   }
 };
 
+const favoriteLimit = 30;
+
 export const getAllFavoriteExercises = async (req, res) => {
   try {
-    const favoriteExercises = await userService.getFavoriteExercises(
-      req.user.id
-    );
+    const user = req.currentUser;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || favoriteLimit;
+    const startIndex = (page - 1) * limit;
+
+    const favoriteExercises = user.favoriteExercises;
+    const paginated = favoriteExercises.slice(startIndex, startIndex + limit);
+    const totalPages = Math.ceil(favoriteExercises.length / limit);
 
     const response = {
       success: true,
-      count: favoriteExercises.length,
-      data: favoriteExercises.map((exercise) => ({
+      count: paginated.length,
+      currentPage: page,
+      totalPages,
+      data: paginated.map((exercise) => ({
         id: exercise._id,
         name: exercise.name,
         target: exercise.target,
@@ -123,19 +132,18 @@ export const addFavoriteExercise = async (req, res) => {
     }
 
     const user = await userService.getUserById(req.user.id);
-    const limit = 30;
 
-    if (user.favoriteExercises.includes(exerciseId)) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
+    if (user.favoriteExercises.some((id) => id.toString() === exerciseId)) {
+      return res.status(StatusCodes.CONFLICT).json({
         success: false,
         message: "Exercise is already in your favorites",
       });
     }
 
-    if (user.favoriteExercises.length >= limit) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
+    if (user.favoriteExercises.length >= favoriteLimit) {
+      return res.status(StatusCodes.CONFLICT).json({
         success: false,
-        message: `You can only save up to ${limit} favorite exercises`,
+        message: `You can only save up to ${favoriteLimit} favorite exercises`,
       });
     }
 
@@ -166,7 +174,17 @@ export const removeFavoriteExercise = async (req, res) => {
       });
     }
 
-    await userService.removeFavoriteExercise(req.user.id, exerciseId);
+    const user = req.currentUser;
+    if (
+      !user.favoriteExercises.some((ex) => ex._id.toString() === exerciseId)
+    ) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: "Exercise not found in favorites",
+      });
+    }
+
+    await userService.removeFavoriteExercise(user._id, exerciseId);
 
     res.status(StatusCodes.OK).json({
       success: true,

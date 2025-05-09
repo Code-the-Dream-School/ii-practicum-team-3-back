@@ -5,13 +5,16 @@ import {
   removeFavoriteExercise,
 } from "../controllers/exerciseController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import userValidater from "../middleware/userValidator.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getAllFavoriteExercises);
+router.use(authMiddleware, userValidater);
 
-router.post("/:exerciseId", authMiddleware, addFavoriteExercise);
+router.get("/", getAllFavoriteExercises);
 
-router.delete("/:exerciseId", authMiddleware, removeFavoriteExercise);
+router.post("/:exerciseId", addFavoriteExercise);
+
+router.delete("/:exerciseId", removeFavoriteExercise);
 
 export default router;
