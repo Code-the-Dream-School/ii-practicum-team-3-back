@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema(
       minlength: 1,
       maxlength: 35,
     },
+    customWorkout: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Workout",
+      default: [],
+    },
     favoriteExercises: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Exercise",

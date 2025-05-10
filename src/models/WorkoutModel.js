@@ -40,7 +40,6 @@ const WorkoutSchema = new mongoose.Schema({
     },
   },
 
-<<<<<<< HEAD
   weight: {
     from: {
       type: Number,
@@ -53,27 +52,6 @@ const WorkoutSchema = new mongoose.Schema({
       required: true,
       min: 30,
       max: 300,
-=======
-    weight: {
-      from: { 
-        type: Number, 
-        required: true,
-        min: 30,
-        max: 300,  // Increased from 60 to 300
-      },
-      to: { 
-        type: Number, 
-        required: true,
-        min: 30,
-        max: 300,  // Increased from 300 to match 'from'
-      },  
-    },
-            
-    level: {
-        type: String, 
-        enum: ["Beginner","Intermediate", "Advanced"], 
-        required: true 
->>>>>>> dev
     },
   },
   level: {
@@ -82,11 +60,25 @@ const WorkoutSchema = new mongoose.Schema({
     required: true,
   },
 
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  createdBy: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "User",
+    // required: true
+  },
+
   isTemplate: {
     type: Boolean,
     default: false,
   },
+
+  
+  workoutType: {
+    type: String,
+    enum: ["template", "custom", "saved", "custom-saved"], // Expand options later and refactor code for user save workout
+    default: "template"
+  },
+
+
   originalWorkoutId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Workout",
