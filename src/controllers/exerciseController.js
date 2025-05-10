@@ -90,7 +90,7 @@ export const getAllFavoriteExercises = async (req, res) => {
       currentPage: page,
       totalPages,
       data: paginated.map((exercise) => ({
-        id: exercise._id,
+        _id: exercise._id,
         name: exercise.name,
         target: exercise.target,
         bodyPart: exercise.bodyPart,
