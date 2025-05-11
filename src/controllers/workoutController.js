@@ -230,6 +230,10 @@ export const getWorkoutById = async (req, res) => {
       });
     }
 
+    const copies = await Workout.find({ originalWorkoutId: id }) //find copies
+      .select("_id createdBy")
+      .lean();
+
     const formattedWorkout = {
       id: workout._id,
       name: workout.name,
@@ -255,6 +259,11 @@ export const getWorkoutById = async (req, res) => {
           gifUrl: ex.exerciseId?.gifUrl || null,
           secondaryMuscles: ex.exerciseId?.secondaryMuscles || [],
           instructions: ex.exerciseId?.instructions || [],
+        })) || [],
+      copies:
+        copies.map((copy) => ({
+          id: copy._id,
+          copiedBy: copy.createdBy,
         })) || [],
     };
 
