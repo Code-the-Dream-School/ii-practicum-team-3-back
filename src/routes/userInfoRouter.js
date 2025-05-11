@@ -7,9 +7,7 @@ import {
 
 const router = express.Router();
 
-router.use(authMiddleware);
-
-router.get("/profile", getUserInfo);
+router.get("/profile", authMiddleware, getUserInfo);
 router.get("/count", getUsersCount);
 
 export default router;
