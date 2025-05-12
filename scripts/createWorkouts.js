@@ -479,9 +479,9 @@ const getSetsAndReps = (level) => {
 
 const createTemplateWorkouts = async () => {
   try {
-    // Delete existing template workouts
-    const deleteResult = await Workout.deleteMany({ isTemplate: true });
-    console.log(`Deleted ${deleteResult.deletedCount} existing templates`);
+    // Delete existing template workouts if needed
+    // const deleteResult =  await Workout.deleteMany({ isTemplate: { $in: [true, false] } });
+    // console.log(`Deleted ${deleteResult.deletedCount} existing templates`);
 
     let createdCount = 0;
 
@@ -519,6 +519,7 @@ const createTemplateWorkouts = async () => {
           weight: config.weight,
           level: config.level,
           isTemplate: true,
+          workoutType: "template",
           createdBy: ADMIN_USER,
         });
 
