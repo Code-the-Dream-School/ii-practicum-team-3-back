@@ -3,9 +3,7 @@ import Workout from "../models/WorkoutModel.js";
 
 
 
-
 // create custom workout
-
 const createCustomizedWorkout = async (req, res) => {
   try {
     const { level, gender, age, weight } = req.body;
@@ -107,30 +105,9 @@ const createCustomizedWorkout = async (req, res) => {
     });
   }
 };
-// save to DB
 
-const saveWorkoutToDatabase = async (workoutData, userId) => {
-  try {
-    const { _id, __v, ...cleanData } = workoutData;
 
-    const workout = new Workout({
-      ...cleanData,
-      isTemplate: false,
-      workoutType: "custom-saved",
-      createdBy: userId,
-      originalWorkoutId: workoutData.isTemplate ? _id : workoutData.originalWorkoutId || null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
 
-    return await workout.save();
-  } catch (error) {
-    console.error("Database save error:", error);
-    throw error;
-  }
-};
-
-// save custom workout
 const saveCustomWorkout = async (req, res) => {
   try {
     const { id } = req.params;
@@ -138,68 +115,47 @@ const saveCustomWorkout = async (req, res) => {
 
     const templateWorkout = await Workout.findOne({
       _id: id,
-      isTemplate: false
+      isTemplate: false,
     })
-    .populate({
-      path: "exercises.exerciseId",
-      select: "name target bodyPart equipment gifUrl instructions"
-    })
-    .lean();
+      .populate("exercises.exerciseId", "name target bodyPart equipment gifUrl instructions")
+      .lean();
 
     if (!templateWorkout) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: "Template workout not found or not a template"
+        message: "Template workout not found or not a template",
       });
     }
-  
-// Check for duplicates
 
-const existingWorkout = await Workout.findOne({
-  createdBy: userId,
-  originalWorkoutId: id,
-  isTemplate: false,
-  workoutType: "custom-saved"
-});
+    const { _id, __v, createdAt, updatedAt, ...cleanData } = templateWorkout;
 
-if (existingWorkout) {
-  return res.status(StatusCodes.CONFLICT).json({
-    success: false,
-    message: "Workout has already been saved"
-  });
-}
-
-    const workoutToSave = {
-      ...templateWorkout,
-      workoutType: "saved",
+    const savedWorkout = new Workout({
+      ...cleanData,
       isTemplate: false,
-      originalWorkoutId: id
-    };
+      workoutType: "custom-saved",
+      createdBy: userId,
+      originalWorkoutId: id,
+    });
 
-    // Saving....
-    const savedWorkout = await saveWorkoutToDatabase(workoutToSave, userId);
-
-    // Rrspond
+    const saved = await savedWorkout.save();
 
     return res.status(StatusCodes.CREATED).json({
       success: true,
       message: "Workout saved successfully",
       data: {
-        _id: savedWorkout._id,
-        name: savedWorkout.name,
-        exercises: savedWorkout.exercises,
-        workoutType: savedWorkout.workoutType,
-        originalWorkoutId: savedWorkout.originalWorkoutId,
-        isTemplate: savedWorkout.isTemplate
-
-      }
+        _id: saved._id,
+        name: saved.name,
+        exercises: saved.exercises,
+        workoutType: saved.workoutType,
+        originalWorkoutId: saved.originalWorkoutId,
+        isTemplate: saved.isTemplate,
+      },
     });
-
   } catch (error) {
     console.error("Controller error:", error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Failed to save workout"
+      message: error.message || "Failed to save workout",
     });
   }
 };
