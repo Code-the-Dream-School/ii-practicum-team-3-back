@@ -16,6 +16,9 @@ import customWorkoutRoute from "./routes/customWorkoutRoute.js";
 import userUpdateProfileRouter from "./routes/userUpdateProfileRouter.js";
 import favoriteExercisesRouter from "./routes/favoriteExercisesRouter.js";
 import userInfoRouter from "./routes/userInfoRouter.js";
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
+
 // middleware
 app.use(
   cors({
@@ -32,6 +35,8 @@ app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.static("public"));
 
+
+
 app.use((req, res, next) => {
   console.log(`\n[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
@@ -47,9 +52,14 @@ app.use("/api/v1/profile", userUpdateProfileRouter);
 app.use("/api/v1/favorites", favoriteExercisesRouter);
 app.use("/api/v1/user", userInfoRouter);
 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use((req, res) => {
   res.status(404).json({ message: "Page not Found" });
 });
+
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack || err);
@@ -57,5 +67,6 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
 
 export default app;

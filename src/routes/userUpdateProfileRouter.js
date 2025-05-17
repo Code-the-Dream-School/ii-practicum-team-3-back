@@ -7,6 +7,56 @@ import {
 } from "../middleware/updateUserProfileValidator.js";
 const router = express.Router();
 
+
+
+
+/**
+ * @swagger
+ * /api/user/profile:
+ *   patch:
+ *     summary: Update user profile
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       description: Fields to update in the user profile
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: newusername
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *    
+ *             required:
+ *               - username
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 user:
+ *                   type: object
+ *                   description: Updated user data
+ *       400:
+ *         description: Validation errors or bad request
+ *       401:
+ *         description: Unauthorized (invalid or missing token)
+ */
+
+
 router.patch(
   "/",
   authenticateUser,
@@ -16,3 +66,5 @@ router.patch(
 );
 
 export default router;
+
+
