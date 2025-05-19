@@ -12,8 +12,6 @@ import { forgotPasswordLimiter } from "../middleware/rateLimiter.js";
 const router = express.Router();
 
 
-
-
 /**
  * @swagger
  * tags:
@@ -33,6 +31,8 @@ const router = express.Router();
  *             required:
  *               - email
  *               - password
+ *               - firstName
+ *               - lastName
  *             properties:
  *               email:
  *                 type: string
@@ -40,6 +40,13 @@ const router = express.Router();
  *               password:
  *                 type: string
  *                 example: strongPassword123
+ *               firstName:
+ *                 type: string
+ *                 example: userNams
+ *               lastName:
+ *                 type: string
+ *                 example: userLastname
+ * 
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -109,36 +116,9 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Password reset email sent if user exists
- * 
- * /api/v1/reset-password/{token}:
- *   post:
- *     summary: Reset password using reset token
- *     tags: [Auth]
- *     parameters:
- *       - name: token
- *         in: path
- *         required: true
- *         description: Password reset token
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - password
- *             properties:
- *               password:
- *                 type: string
- *                 example: newStrongPassword123
- *     responses:
- *       200:
- *         description: Password reset successful
- *       400:
- *         description: Invalid token or bad request
  */
+
+
 
 router.post("/register", register);
 router.post("/login", login);

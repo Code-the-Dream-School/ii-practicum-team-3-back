@@ -18,7 +18,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/saved-workouts/{workoutId}:
+ * /api/v1/saved-workouts/{workoutId}:
  *   post:
  *     summary: Save a workout for the authenticated user
  *     tags: [SavedWorkouts]
@@ -42,7 +42,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/saved-workouts/all:
+ * /api/v1/saved-workouts/all:
  *   get:
  *     summary: Get all saved workouts for the authenticated user
  *     tags: [SavedWorkouts]
@@ -57,7 +57,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/saved-workouts/{workoutId}:
+ * /api/v1/saved-workouts/{workoutId}:
  *   delete:
  *     summary: Delete a saved workout for the authenticated user
  *     tags: [SavedWorkouts]

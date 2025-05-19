@@ -11,7 +11,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/user/profile:
+ * /api/v1/user/profile:
  *   get:
  *     summary: Get authenticated user's profile info
  *     tags: [User]
@@ -41,7 +41,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/user/count:
+ * /api/v1/user/count:
  *   get:
  *     summary: Get total count of registered users
  *     tags: [User]

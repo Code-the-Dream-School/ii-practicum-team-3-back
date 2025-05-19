@@ -20,9 +20,10 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 
 // middleware
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "https://fitnessappsadcat.netlify.app",
     credentials: true,
   })
 );

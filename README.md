@@ -1,120 +1,132 @@
+# Fitness App — Back-End Repository
 
+Welcome to the **Fitness App Back-End** - a full-stack application designed to help users manage their workouts and fitness goals. It enables users to create and manage fitness profiles with both personalized and pre-built workouts. This Node.js back-end handles API requests, user management, and workout customization, providing a seamless experience for the React front-end.
 
-### 🏋️‍♀️ Fitness App — Back-End Repository
+[Live App](https://fitnessappsadcat.netlify.app/)  
+[Back-End Deployment](https://fitnessappsadcat-back.onrender.com/)
 
-Welcome to the back-end repository of the Fitness App — a full-stack application designed to help users manage their workouts and fitness goals.
-It enables users to create and manage fitness profiles with both personalized and pre-built workouts. This Node.js back-end handles API requests, user management, and workout customization, providing a seamless experience for the React front-end.
+---
 
-[Live app](https://fitnessappsadcat.netlify.app/)
+## Table of Contents
 
-This repository hosts the Node.js and Express.js back-end application.
-[Back End deployment](https://fitnessappsadcat-back.onrender.com/)
+- [Technologies](#technologies)
+- [Key Features](#key-features)
+- [Setting Up Local Development](#setting-up-local-development)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [Authors](#authors)
 
-Table of Contents
-Technologies 
-Key Features
-Quick Start
-Environment Variables
-API Documentation
-Authors
+---
 
-### Technologies 
+## Technologies
 
-Core Frameworks:
-Node.js – JavaScript runtime for building fast, scalable server applications.
-Express.js – Minimal and flexible framework.
+### Core Frameworks
+- **Node.js** – JavaScript runtime for building scalable server-side applications.
+- **Express.js** – Minimal and flexible web application framework.
 
-Database & ORM:
-MongoDB – NoSQL database for storing users, workouts, and exercises.
-Mongoose – ODM for MongoDB with schema-based modeling.
-csv-parser – Parses CSV files for importing structured data.
+### Database & ORM
+- **MongoDB** – NoSQL database for storing user profiles, workouts, and exercises.
+- **Mongoose** – ODM for MongoDB with schema-based modeling.
+- **csv-parser** – Parses CSV files for importing structured data.
 
-Authentication:
-jsonwebtoken (JWT) – Secure user authentication via tokens.
-bcryptjs – Secure password hashing.
+### Authentication & Security
+- **jsonwebtoken (JWT)** – Token-based user authentication.
+- **bcryptjs** – Secure password hashing.
+- **helmet** – Secures HTTP headers.
+- **cors** – Enables Cross-Origin Resource Sharing.
+- **xss-clean** – Prevents cross-site scripting.
+- **express-rate-limit** – Prevents brute-force attacks.
+- **cookie-parser** – Parses cookies.
+- **express-validator** – Validates and sanitizes user input.
 
-Cloud Storage:
-Cloudinary – hosting and optimization service.
+### File & Email Services
+- **Cloudinary** – Cloud image hosting and optimization.
+- **Nodemailer** – Sends transactional emails (e.g., password resets).
 
-Email Functionality:
-Nodemailer – Sending transactional emails (e.g., password resets).
+### Developer Tools
+- **nodemon** – Auto-restarts server on file changes.
+- **dotenv** – Loads environment variables.
+- **morgan** – Logs HTTP requests.
+- **http-status-codes** – Utility for HTTP status codes.
 
-Development Tools:
-nodemon – Automatically restarts your server during development.
-dotenv – Loads environment variables from a .env file.
-morgan – HTTP request logger for debugging requests.
-http-status-codes – Easy access to HTTP response status codes.
+### API Documentation & Testing
+- **Postman** – API testing and debugging.
+- **Swagger JSDoc** – Generates OpenAPI docs from code comments.
+- **Swagger UI Express** – Serves interactive API documentation.
 
-Middleware and Security
-helmet – Secures HTTP headers to protect against common vulnerabilities.
-cors – Enables Cross-Origin Resource Sharing.
-xss-clean – Sanitizes user input to prevent cross-site scripting (XSS).
-express-rate-limit – Limits repeated requests to prevent brute-force attacks.
-cookie-parser – Parses cookies in incoming requests.
-express-validator – Validates and sanitizes user input.
+---
 
-API Documentatio and testing:
-Postman – API testing and debugging.
-Swagger JSDoc - A library for generating OpenAPI documentation from JSDoc comments in the codebase.
-Swagger UI Express - A tool to serve interactive API documentation.
+## Key Features
 
-### Key Features
+### Authentication
+- User registration, login, logout.
+- Secure password reset & change.
+- Passwords hashed with `bcrypt`.
 
-Users can create an account, reset, or change their passwords.
-Full CRUD operations for updating user profiles.
-Passwords are securely hashed and stored.
-Each user has a profile page that displays:
-- Personal information
-- Saved exercises
-- Saved workouts
-- Custom workouts
+### User Profiles
+- Full CRUD support for user data.
+- Personalized dashboard with:
+  - Personal details
+  - Favorite exercises
+  - Saved workouts
+  - Custom routines
 
-Exercise and workout management
+### Exercise Management
+- Browse built-in exercise library.
+- Add/remove exercises from favorites.
+- Filter exercises by:
+  - **Equipment** (e.g., dumbbells, bands, bodyweight)
+  - **Target area** (e.g., legs, abs, chest, arms)
 
-Users can explore a library of exercises.
-Users can add or remove exercises from their favorites.
-Users can search for exercises using predefined filters:
-- Equipment availability (dumbbells, resistance bands, bodyweight, etc.).
-- Body focus (butt & leg, Abs, Full body, arm, shoulders, back, chest)
-View and follow exercises with step-by-step guidance.
-Full CRUD for workouts (create, read, update, delete)
-Display workouts with detailed instructions and demonstrations.
-Workout based on focus areas (e.g., specific muscle groups like legs, chest, or full-body), 
-Custom workouts are tailored to weight, age, height, goals, and fitness level (beginner, intermediate, advanced). 
+### Workout Management
+- Create, update, and delete custom workouts.
+- View workouts with step-by-step instructions.
+- Workouts based on:
+  - Muscle groups (e.g., full-body, chest, legs)
+  - Fitness level (beginner, intermediate, advanced)
+  - Personal metrics (age, weight, height, goals)
 
+---
 
-### Setting up local development environment
+## Setting Up Local Development
 
-1. Create a folder to contain both the front-end and back-end repos 
-2. Clone this repository to that folder
-3. Run `npm install` to install dependencies
-4. Run `npm run dev` to start the development server
-5. Open http://localhost:3000/ to test the back end
-6. Your back-end server is now running. You can now run the front-end app on http://localhost:5173/ 
+1. Create a folder to hold both the front-end and back-end repositories.
+2. Clone this repository into that folder.
+3. Run `npm install` to install all dependencies.
+4. Create a `.env` file (see below).
+5. Start the development server with `npm run dev`.
+6. The server runs at [http://localhost:3000](http://localhost:3000).
+7. Front-end can be accessed at [http://localhost:5173](http://localhost:5173) after setting up separately.
 
-### Environment Variables
+---
 
-To properly run this application, you need to set up environment variables. This is done by creating a .env file in the root directory of the backend folder
-.env
+## Environment Variables
 
+Create a `.env` file in the root of your back-end project:
+
+```env
 PORT=3000
 JWT_SECRET=your_SECRET_key
 JWT_REFRESH_SECRET=your_REFRESH_key
 MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<database_name>
 JWT_LIFETIME=15d
 CLIENT_URL=http://localhost:5173
-ADMIN_USER=<admin_user_id> /// Used only for generating new workouts
+ADMIN_USER=<admin_user_id> # Used for generating new workouts
 EXERCISE_LIMIT=6
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=<your_smtp_email>
 SMTP_PASS=<your_smtp_app_password>
+```
+
+---
 
 ### API
 
 This project includes API documentation generated with Swagger. 
 You can explore and test the API endpoints at: http://localhost:3000/api-docs  
 
+---
 
 ### Authors 
 

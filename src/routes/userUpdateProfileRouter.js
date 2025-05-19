@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/user/profile:
+ * /api/v1/profile:
  *   patch:
  *     summary: Update user profile
  *     tags: [User]
@@ -26,16 +26,25 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               gender:
  *                 type: string
- *                 example: newusername
- *               email:
+ *                 enum: [Male, Female]
+ *                 example: Male
+ *               age:
+ *                 type: integer
+ *                 minimum: 10
+ *                 maximum: 100
+ *                 example: 28
+ *               weight:
+ *                 type: number
+ *                 minimum: 30
+ *                 maximum: 300
+ *                 example: 75.5
+ *               fitnessLevel:
  *                 type: string
- *                 format: email
- *                 example: user@example.com
- *    
- *             required:
- *               - username
+ *                 enum: [Beginner, Intermediate, Advanced]
+ *                 example: Intermediate
+ *             minProperties: 1
  *     responses:
  *       200:
  *         description: User profile updated successfully

@@ -9,7 +9,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/workouts:
+ * /api/v1/workouts:
  *   get:
  *     summary: Get all workouts
  *     tags: [Workouts]
@@ -23,7 +23,7 @@ router.get("/", getAllWorkouts );
 
 /**
  * @swagger
- * /api/workouts/{id}:
+ * /api/v1/workouts/{id}:
  *   get:
  *     summary: Get a workout by ID
  *     tags: [Workouts]

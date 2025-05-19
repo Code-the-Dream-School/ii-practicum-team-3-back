@@ -12,13 +12,12 @@ import { handleValidationErrors , validateWorkoutParams} from '../middleware/wor
 const router = express.Router();
 
 
-
-
 /**
  * @swagger
- * /customized-workout/create:
+ * /api/v1/customized-workout/create:
  *   post:
- *     summary: Create a customized workout
+ *     summary: Create a customized workout plan
+ *     description: Creates a personalized workout based on user's profile and fitness level
  *     tags: [CustomWorkouts]
  *     security:
  *       - bearerAuth: []
@@ -28,50 +27,134 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "Morning Full Body"
- *               exercises:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     exerciseId:
- *                       type: string
- *                     sets:
- *                       type: integer
- *                     reps:
- *                       type: integer
  *             required:
- *               - name
- *               - exercises
+ *               - level
+ *               - gender
+ *               - age
+ *               - weight
+ *             properties:
+ *               level:
+ *                 type: string
+ *                 enum: [Beginner, Intermediate, Advanced]
+ *                 example: "Intermediate"
+ *               gender:
+ *                 type: string
+ *                 enum: [Male, Female]
+ *                 example: "Male"
+ *               age:
+ *                 type: integer
+ *                 minimum: 13
+ *                 maximum: 100
+ *                 example: 30
+ *               weight:
+ *                 type: integer
+ *                 minimum: 30
+ *                 maximum: 300
+ *                 example: 75
  *     responses:
  *       201:
- *         description: Customized workout created successfully
- *       400:
- *         description: Validation error
- * 
- * /api/custom-workouts/save/{id}:
- *   post:
- *     summary: Save a customized workout for user
- *     tags: [CustomWorkouts]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         description: Customized workout ID
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Workout saved successfully
+ *         description: Custom workout created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomWorkout'
  *       401:
- *         description: Unauthorized
- * 
- * /api/custom-workouts/all:
+ *         description: Unauthorized - Missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: Missing token"
+ *       409:
+ *         description: Conflict - User already has a custom workout
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You already have a customized workout"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to generate customized workout"
+ *
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   schemas:
+ *     CustomWorkout:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Customized workout created successfully"
+ *         data:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "507f1f77bcf86cd799439011"
+ *             name:
+ *               type: string
+ *               example: "Custom Intermediate Workout"
+ *             exercises:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Exercise'
+ *             workoutType:
+ *               type: string
+ *               example: "custom"
+ *     Exercise:
+ *       type: object
+ *       properties:
+ *         exerciseId:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *               example: "Push-ups"
+ *             target:
+ *               type: string
+ *               example: "chest"
+ *             bodyPart:
+ *               type: string
+ *               example: "upper body"
+ *             equipment:
+ *               type: string
+ *               example: "body weight"
+ *             gifUrl:
+ *               type: string
+ *               example: "http://example.com/pushup.gif"
+ *         sets:
+ *           type: number
+ *           example: 3
+ *         reps:
+ *           type: number
+ *           example: 12
+ * /api/v1/customized-workout/all:
  *   get:
  *     summary: Get all customized workouts for authenticated user
  *     tags: [CustomWorkouts]
@@ -105,7 +188,7 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  * 
- * /api/custom-workouts/{id}:
+ * /api/v1/customized-workout/{id}:
  *   delete:
  *     summary: Delete a customized workout
  *     tags: [CustomWorkouts]
@@ -124,6 +207,9 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
+
+
+
 
 // Route to create customized workout
 router.post('/create', 
